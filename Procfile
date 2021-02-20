@@ -1,1 +1,1 @@
-web: npm run surver
+web: npm run server
