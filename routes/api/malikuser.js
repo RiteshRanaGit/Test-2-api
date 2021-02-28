@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 
 // lodad moddles
-const PublicUser = require('../../models/PublicUser');
+const MalikUser = require('../../models/MalikUser');
 
 
 //Load Input validation
@@ -24,13 +24,13 @@ const { default: validator } = require('validator');
 // @decs    Test user route
 // @access  Public
 
-router.get('/test', (req, res) => res.json({ msg: " user is working"}));
+router.get('/test', (req, res) => res.json({ msg: "malik user is working"}));
 
 // @route   post api/user/register
 // @decs    Register  user 
 // @access  Public
 
-router.post('/register', (req, res) => {
+router.post('/malikregister', (req, res) => {
     
     // check validation
     const {errors, isValid } = validateRegisterInput(req.body);
@@ -41,28 +41,28 @@ router.post('/register', (req, res) => {
     }
     
 
-    PublicUser.findOne({email: req.body.email})
-    .then(publicuser => {
-        if(publicuser){
+    MalikUser.findOne({email: req.body.email})
+    .then(malikuser => {
+        if(malikuser){
             errors.email = "email already exist";
             return res.status(400).json(errors);
         } else {
-            console.log("befor new publicuser")
-            const newPublicUser = new PublicUser({
+            console.log("befor new malikuser")
+            const newMalikUser = new MalikUser({
                 name: req.body.name,
                 email: req.body.email,
                 
                 password: req.body.password,
                 
-                role: roles.public
+                
             });
             console.log("after new user")
             bcrypt.genSalt(10,(err, salt) =>{
-                bcrypt.hash(newPublicUser.password, salt, (err, hash)=>{
+                bcrypt.hash(newMalikUser.password, salt, (err, hash)=>{
                     if(err) throw err;
-                    newPublicUser.password = hash;
-                    newPublicUser.save()
-                    .then(publicuser => res.json(publicuser))
+                    newMalikUser.password = hash;
+                    newMalikUser.save()
+                    .then(malikuser => res.json(malikuser))
                     .catch(err => console.log(err));
                 })
             })
@@ -74,7 +74,7 @@ router.post('/register', (req, res) => {
 // @decs    publicuser login / Return jwt token 
 // @access  Public
 
-router.post('/login', (req, res) => {
+router.post('/maliklogin', (req, res) => {
 
     // check validation
     const {errors, isValid } = validateLoginInput(req.body);
@@ -86,32 +86,32 @@ router.post('/login', (req, res) => {
 
     const email = req.body.email;
     const password = req.body.password;
-    const role = roles.public;
+   
     
     console.log(email);
     console.log(password);
 
     //find user by email
-    PublicUser.findOne({email})
-    .then(publicuser => {
+    MalikUser.findOne({email})
+    .then(malikuser => {
        
-        if(!publicuser){
+        if(!malikuser){
             errors.email = "User not Found!"
             return res.status(400).json(errors);
         }
 
         // check password
-        bcrypt.compare(password, publicuser.password)
+        bcrypt.compare(password, malikuser.password)
         .then( ismatch => {
             if(ismatch){
                 //user match
                 const payload = {
-                    id: publicuser.id,
-                    name: publicuser.name,
+                    id: malikuser.id,
+                    name: malikuser.name,
                     
-                    email: publicuser.email,
+                    email: malikuser.email,
                     
-                    role: publicuser.role
+                   
                 } 
                 // sign token 
                 jwt.sign(

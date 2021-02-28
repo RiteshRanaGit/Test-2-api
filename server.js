@@ -3,8 +3,10 @@ const mongooes = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 
- const publicuser = require('./routes/api/publicuser');
- const admin = require('./routes/api/admin');
+ const malikuser = require('./routes/api/malikuser');
+ const form = require('./routes/api/form');
+
+
 
 
 
@@ -40,13 +42,15 @@ app.get("/",(req,res)=>{
 //passport middleware 
 app.use(passport.initialize());
 
-//Passport config 
-//require('./config/passport')(passport);
+// Passport config 
+require('./config/passport')(passport);
 
 //use routes 
 
-app.use('/api/publicuser', publicuser);
-app.use('/api/admin', admin);
+app.use('/api/malikuser', malikuser);
+app.use('/api/form', form);
+
+
 
 
 
