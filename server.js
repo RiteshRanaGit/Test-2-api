@@ -1,10 +1,10 @@
 const express = require('express');
 const mongooes = require('mongoose');
 const bodyParser = require('body-parser');
-const passport = require('passport');
 
- const malikuser = require('./routes/api/malikuser');
- const form = require('./routes/api/form');
+
+ 
+const todo = require('./routes/api/todo');
 
 
 
@@ -39,16 +39,13 @@ app.get("/",(req,res)=>{
     res.send("API");
 })
 
-//passport middleware 
-app.use(passport.initialize());
 
-// Passport config 
-require('./config/passport')(passport);
+
 
 //use routes 
 
-app.use('/api/malikuser', malikuser);
-app.use('/api/form', form);
+
+app.use('/api/todo', todo);
 
 
 
